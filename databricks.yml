@@ -1,0 +1,25 @@
+bundle:
+  name: my-project
+
+include:
+  - resources/*.yml
+
+targets:
+  dev:
+    mode: development
+    default: true
+    workspace:
+      host: https://your-dev-workspace.azuredatabricks.net
+      # Auth via GitHub secret DATABRICKS_TOKEN_DEV
+
+  staging:
+    mode: development
+    workspace:
+      host: https://your-staging-workspace.azuredatabricks.net
+
+  prod:
+    mode: production
+    workspace:
+      host: https://your-prod-workspace.azuredatabricks.net
+    run_as:
+      service_principal_name: prod-service-principal@your-tenant.com
