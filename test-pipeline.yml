@@ -1,0 +1,22 @@
+resources:
+  pipelines:
+    my_pipeline:
+      name: my_pipeline_${bundle.target}
+      development: ${bundle.target != 'prod'}
+      
+      clusters:
+        - label: default
+          num_workers: 2
+
+      libraries:
+        - notebook:
+            path: ./notebooks/transform.py
+
+      configuration:
+        env: ${bundle.target}
+
+      notifications:
+        - email_recipients:
+            - data-team@your-org.com
+          alerts:
+            - on-update-failure
