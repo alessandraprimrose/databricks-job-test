@@ -1,4 +1,4 @@
-name: Deploy
+name: Deploy to Databricks
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
 
 jobs:
   deploy:
-    name: Deploy to Production
+    name: Deploy Databricks Bundle
     runs-on: ubuntu-latest
 
     steps:
@@ -19,25 +19,21 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
+      - name: Install Databricks CLI
+        run: pip install databricks-cli
 
-      - name: Run tests
-        run: |
-          pip install pytest
-          pytest
-
-      - name: Deploy
+      - name: Configure Databricks CLI
         env:
-          DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
-          DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
-          DEPLOY_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
+          DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
+          DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
         run: |
-          echo "$DEPLOY_KEY" > deploy_key
-          chmod 600 deploy_key
-          ssh -i deploy_key -o StrictHostKeyChecking=no \
-            $DEPLOY_USER@$DEPLOY_HOST \
-            "cd /your/app/path && git pull && pip install -r requirements.txt && sudo systemctl restart your-app"
-          rm deploy_key
+          databricks configure --token <<EOF
+          $DATABRICKS_HOST
+          $DATABRICKS_TOKEN
+          EOF
+
+      - name: Validate bundle
+        run: databricks bundle validate --target production
+
+      - name: Deploy bundle
+        run: databricks bundle deploy --target production
