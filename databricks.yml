@@ -8,8 +8,8 @@ targets:
       host: ${var.databricks_host}
     resources:
       jobs:
-        Test_Job_12_05_26:
-          name: Test Job - 12/05/26
+        Forecasting-POC:
+          name: Forecasting-POC
 
 include:
   - databricks/pipelines/*.yml
