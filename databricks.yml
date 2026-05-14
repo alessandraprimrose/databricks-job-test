@@ -7,13 +7,13 @@ targets:
     workspace:
       host: ""
       root_path: /Workspace/Users/ally.allen@circyl.co.uk/.bundle/${bundle.name}/${bundle.target}
+    permissions:
+      - level: CAN_MANAGE
+        user_name: ally.allen@circyl.co.uk
     resources:
       jobs:
         Forecasting-POC:
           name: Forecasting-POC
-    permissions:
-      level: CAN_MANAGE
-      user_name: ally.allen@circyl.co.uk
 
 include:
   - databricks/pipelines/*.yml
