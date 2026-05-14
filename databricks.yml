@@ -4,6 +4,11 @@ bundle:
 targets:
   production:
     mode: production
+    tasks:
+    - task_key: DX_Forecasting_NB
+    notebook_task:
+      notebook_path: /Workspace/Users/ally.allen@circyl.co.uk/POC Demo
+      source: WORKSPACE
 
 include:
   - databricks/pipelines/*.yml
