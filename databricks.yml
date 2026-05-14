@@ -11,6 +11,9 @@ targets:
       jobs:
         Forecasting-POC:
           name: Forecasting-POC
+    permissions:
+      level: CAN_MANAGE
+      user_name: ally.allen@circyl.co.uk
 
 include:
   - databricks/pipelines/*.yml
