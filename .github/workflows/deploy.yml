@@ -21,23 +21,17 @@ jobs:
           python-version: '3.12'
 
       - name: Install Databricks CLI
-        run: pip install databricks-cli
-        
-      - name: Upgrade Databricks CLI
-        run: pip install --upgrade pip
-
-      - name: Show Databricks CLI version
-        run: databricks version
+        run: |
+          curl -fsSL https://raw.githubusercontent.com/databricks/setup-cli/main/install.sh | sh
 
       - name: Configure Databricks CLI
         env:
           DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
           DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
         run: |
-          databricks configure --token <<EOF
-          $DATABRICKS_HOST
-          $DATABRICKS_TOKEN
-          EOF
+          echo "[DEFAULT]
+          host = $DATABRICKS_HOST
+          token = $DATABRICKS_TOKEN" > ~/.databrickscfg
 
       - name: Validate bundle
         run: databricks bundle validate --target production
