@@ -4,12 +4,6 @@ bundle:
 targets:
   production:
     mode: production
-    workspace:
-      host: ${secrets.DATABRICKS_HOST}
-    resources:
-      jobs:
-        Forecasting-POC:
-          name: Forecasting-POC
 
 include:
   - databricks/pipelines/*.yml
