@@ -23,8 +23,11 @@ jobs:
       - name: Install Databricks CLI
         run: pip install databricks-cli
         
-      - name: Updgrade Databricks CLI
+      - name: Upgrade Databricks CLI
         run: pip install --upgrade pip
+
+      - name: Show Databricks CLI version
+        run: databricks version
 
       - name: Configure Databricks CLI
         env:
