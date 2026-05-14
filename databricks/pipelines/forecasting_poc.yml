@@ -1,7 +1,7 @@
 resources:
   jobs:
-    Test_Job_12_05_26:
-      name: Test Job - 12/05/26
+    Forecasting-POC:
+      name: Forecasting-POC
       tasks:
         - task_key: DX_Forecasting_NB
           notebook_task:
