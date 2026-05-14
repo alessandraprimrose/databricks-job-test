@@ -1,25 +1,15 @@
 bundle:
-  name: my-project
-
-include:
-  - resources/*.yml
+  name: forecasting_poc
 
 targets:
-  dev:
-    mode: development
-    default: true
-    workspace:
-      host: https://your-dev-workspace.azuredatabricks.net
-      # Auth via GitHub secret DATABRICKS_TOKEN_DEV
-
-  staging:
-    mode: development
-    workspace:
-      host: https://your-staging-workspace.azuredatabricks.net
-
-  prod:
+  production:
     mode: production
     workspace:
-      host: https://your-prod-workspace.azuredatabricks.net
-    run_as:
-      service_principal_name: prod-service-principal@your-tenant.com
+      host: ${var.databricks_host}
+    resources:
+      jobs:
+        Test_Job_12_05_26:
+          name: Test Job - 12/05/26
+
+include:
+  - databricks/pipelines/*.yml
