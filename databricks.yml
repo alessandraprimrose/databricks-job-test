@@ -6,6 +6,7 @@ targets:
     mode: production
     workspace:
       host: ""
+      root_path: /Workspace/Users/ally.allen@circyl.co.uk/.bundle/${bundle.name}/${bundle.target}
     resources:
       jobs:
         Forecasting-POC:
