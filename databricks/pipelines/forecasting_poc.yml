@@ -1,0 +1,12 @@
+resources:
+  jobs:
+    Test_Job_12_05_26:
+      name: Test Job - 12/05/26
+      tasks:
+        - task_key: DX_Forecasting_NB
+          notebook_task:
+            notebook_path: /Workspace/Users/ally.allen@circyl.co.uk/POC Demo
+            source: WORKSPACE
+      queue:
+        enabled: true
+      performance_target: PERFORMANCE_OPTIMIZED
