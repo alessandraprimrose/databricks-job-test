@@ -8,7 +8,7 @@ targets:
       root_path: /Workspace/Shared/.bundle/${bundle.name}/${bundle.target}
     permissions:
       - level: CAN_MANAGE
-        user_name: ally.allen@circyl.co.uk
+        group_name: users
     resources:
       jobs:
         Forecasting-POC:
