@@ -4,11 +4,12 @@ bundle:
 targets:
   production:
     mode: production
-    tasks:
-    - task_key: DX_Forecasting_NB
-    notebook_task:
-      notebook_path: /Workspace/Users/ally.allen@circyl.co.uk/POC Demo
-      source: WORKSPACE
+    workspace:
+      host: ${var.DATABRICKS_HOST}
+    resources:
+      jobs:
+        Forecasting-POC:
+          name: Forecasting-POC
 
 include:
   - databricks/pipelines/*.yml
