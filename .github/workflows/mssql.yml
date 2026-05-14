@@ -1,0 +1,31 @@
+name: Deploy SQL Project
+ 
+on:
+  push:
+    branches: [ "main" ]
+ 
+env:
+  PROJECT_FILE: ${{ vars.SQL_PROJECT_FILE }}        # e.g. src/MyDb/MyDb.sqlproj
+  DATABASE_NAME: ${{ vars.SQL_DATABASE_NAME }}      # e.g. MyDatabase
+  SERVER_NAME: ${{ vars.SQL_SERVER_NAME }}          # e.g. myserver.database.windows.net
+ 
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+      - name: Build
+        run: dotnet build ${{ env.PROJECT_FILE }}
+      - name: Deploy
+        uses: azure/run-sqlpackage@v1
+        with:
+          action: Publish
+          source-file: ./bin/Release/${{ env.DATABASE_NAME }}.dacpac
+          server-name: ${{ env.SERVER_NAME }}
+          database-name: ${{ env.DATABASE_NAME }}
+          connection-string: ${{ secrets.SQLDB_CONNECTION_STRING }}  # secret, not var
+ 
