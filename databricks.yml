@@ -5,7 +5,7 @@ targets:
   production:
     mode: production
     workspace:
-      host: ${var.databricks_host}
+      host: ${secrets.DATABRICKS_HOST}
     resources:
       jobs:
         Forecasting-POC:
