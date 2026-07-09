@@ -48,22 +48,22 @@ targets:
       is_development: true
       run_as_service_principal: <dev-sp-application-id>
 
-  staging:
-    mode: production
-    workspace:
-      host: https://<your-staging-workspace>.azuredatabricks.net
-    variables:
-      catalog: datalake_staging
-      cluster_policy_id: <staging-policy-id>
-      is_development: false
-      run_as_service_principal: <staging-sp-application-id>
+  #staging:
+    #mode: production
+    #workspace:
+      #host: https://<your-staging-workspace>.azuredatabricks.net
+    #variables:
+     # catalog: datalake_staging
+      #cluster_policy_id: <staging-policy-id>
+      #is_development: false
+      #run_as_service_principal: <staging-sp-application-id>
 
-  prod:
-    mode: production
-    workspace:
-      host: https://<your-prod-workspace>.azuredatabricks.net
-    variables:
-      catalog: datalake_prod
-      cluster_policy_id: <prod-policy-id>
-      is_development: false
-      run_as_service_principal: <prod-sp-application-id>
+  #prod:
+    #mode: production
+    #workspace:
+      #host: https://<your-prod-workspace>.azuredatabricks.net
+    #variables:
+      #catalog: datalake_prod
+      #cluster_policy_id: <prod-policy-id>
+      #is_development: false
+      #run_as_service_principal: <prod-sp-application-id>
