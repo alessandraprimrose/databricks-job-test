@@ -21,7 +21,9 @@ variables:
   cluster_id:
     description: ClusterID for each environment
   silver_job_id:
-    description: job_id for silver pipeline
+    description: Environment specific ID for silver job
+  gold_job_id:
+    description: Environment specific ID for gold job
 
 resources:
   jobs:
@@ -44,19 +46,19 @@ resources:
           depends_on:
             - task_key: run_extract_bronze
           run_job_task:
-            job_id: 718334845194690
+            job_id: ${var.silver_job_id}
         - task_key: populate_keymap_tables
           depends_on:
             - task_key: run_job_silver
           notebook_task:
             notebook_path: /Workspace/Users/ally.allen@circyl.co.uk/Datalake_Forecasting/Databricks/notebooks/transform/populate_gold_keymap
             source: WORKSPACE
-          existing_cluster_id: 0605-081756-ixj7yqyo
+          existing_cluster_id: ${var.cluster_id}
         - task_key: run_job_gold
           depends_on:
             - task_key: populate_keymap_tables
           run_job_task:
-            job_id: 696808530170818
+            job_id: ${var.gold_job_id}
       queue:
         enabled: true
       parameters:
@@ -65,4 +67,38 @@ resources:
         - name: datasource
           default: all
       run_as:
-        user_name: ally.allen@circyl.co.uk
+        user_name: ${var.run_as_service_principal}
+
+targets:
+  dev:
+    mode: development
+    workspace:
+      host: https://adb-7405615676142325.5.azuredatabricks.net/
+    variables:
+      catalog: datalake_dev
+      silver_job_id: 718334845194690
+      gold_job_id: 696808530170818
+      cluster_id: 0605-081756-ixj7yqyo
+      run_as_service_principal: <dev-sp-application-id>
+
+  staging:
+    mode: production
+    workspace:
+      host: https://<your-staging-workspace>.azuredatabricks.net
+    variables:
+      catalog: datalake_staging
+      silver_job_id: <staging-silver-job-id>
+      gold_job_id: <staging-gold-job-id>
+      cluster_id: <staging-cluster-id>
+      run_as_service_principal: <staging-sp-application-id>
+
+  prod:
+    mode: production
+    workspace:
+      host: https://<your-prod-workspace>.azuredatabricks.net
+    variables:
+      catalog: datalake_prod
+      silver_job_id: <prod-silver-job-id>
+      gold_job_id: <prod-gold-job-id>
+      cluster_id: <prod-cluster-id>
+      run_as_service_principal: <prod-sp-application-id>
