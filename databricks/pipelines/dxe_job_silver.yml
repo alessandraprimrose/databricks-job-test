@@ -1,3 +1,9 @@
+variables:
+  silver_shared_dimensions_pipeline_id:
+    description: Environment specific ID for silver dimensions pipeline
+  silver_shared_events_pipeline_id:
+    description: Environment specific ID for silver events pipeline
+    
 resources:
   jobs:
     job_silver:
@@ -5,12 +11,37 @@ resources:
       tasks:
         - task_key: sdp_silver_shared_dimensions
           pipeline_task:
-            pipeline_id: 02f5df5a-e421-43cc-aaf4-968eae041b7e
+            pipeline_id: ${var.silver_shared_dimensions_pipeline_id}
         - task_key: sdp_silver_shared_events
           pipeline_task:
-            pipeline_id: 2fae3b07-21f4-455b-bf56-d50d25917517
+            pipeline_id: ${var.silver_shared_events_pipeline_id}
       queue:
         enabled: true
       parameters:
         - name: dataset
           default: ""
+
+targets:
+  dev:
+    mode: development
+    workspace:
+      host: https://adb-7405615676142325.5.azuredatabricks.net/
+    variables:
+      silver_shared_dimensions_pipeline_id: 02f5df5a-e421-43cc-aaf4-968eae041b7e
+      silver_shared_events_pipeline_id: 2fae3b07-21f4-455b-bf56-d50d25917517
+
+  staging:
+    mode: production
+    workspace:
+      host: https://<your-staging-workspace>.azuredatabricks.net
+    variables:
+      silver_shared_dimensions_pipeline_id: <pipeline_id>
+      silver_shared_events_pipeline_id: <pipeline_id>
+
+  prod:
+    mode: production
+    workspace:
+      host: https://<your-prod-workspace>.azuredatabricks.net
+    variables:
+      silver_shared_dimensions_pipeline_id: <pipeline_id>
+      silver_shared_events_pipeline_id: <pipeline_id>
