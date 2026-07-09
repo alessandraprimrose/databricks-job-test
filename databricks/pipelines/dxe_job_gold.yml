@@ -1,0 +1,60 @@
+variables:
+  gold_shared_pipeline_id:
+    description: Environment specific ID for gold shared pipeline
+  gold_items_pipeline_id:
+    description: Environment specific ID for gold items pipeline
+  cluster_id:
+    description: Cluster ID for each environment
+    
+resources:
+  jobs:
+    job_gold:
+      name: job_gold
+      tasks:
+        - task_key: gold_items
+          pipeline_task:
+            pipeline_id: ${var.gold_items_pipeline_id}
+        - task_key: gold_shared
+          pipeline_task:
+            pipeline_id: ${var.gold_shared_pipeline_id}
+        - task_key: gold_fabric
+          depends_on:
+            - task_key: gold_items
+            - task_key: gold_shared
+          notebook_task:
+            notebook_path: /Workspace/Users/ally.allen@circyl.co.uk/Datalake_Forecasting/Databricks/notebooks/transform/control-gold-fabric
+            source: WORKSPACE
+          existing_cluster_id: ${var.cluster_id}
+      queue:
+        enabled: true
+      parameters:
+        - name: dataset
+          default: ""
+
+targets:
+  dev:
+    mode: development
+    workspace:
+      host: https://adb-7405615676142325.5.azuredatabricks.net/
+    variables:
+      gold_shared_pipeline_id: 6776d02f-a91d-4ff7-ad00-5900cde3e9a5
+      gold_items_pipeline_id: dc48056d-f1a7-4c52-b4b6-db0b84b9611f
+      cluster_id: 0605-081756-ixj7yqyo
+
+  staging:
+    mode: production
+    workspace:
+      host: https://<your-staging-workspace>.azuredatabricks.net
+    variables:
+      gold_shared_pipeline_id: <pipeline_id>
+      gold_items_pipeline_id: <pipeline_id>
+      cluster_id: <stag-cluster-id>
+
+  prod:
+    mode: production
+    workspace:
+      host: https://<your-prod-workspace>.azuredatabricks.net
+    variables:
+      gold_shared_pipeline_id: <pipeline_id>
+      gold_items_pipeline_id: <pipeline_id>
+      cluster_id: <prod-cluster-id>
