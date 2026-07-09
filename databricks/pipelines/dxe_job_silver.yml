@@ -1,0 +1,16 @@
+resources:
+  jobs:
+    job_silver:
+      name: job_silver
+      tasks:
+        - task_key: sdp_silver_shared_dimensions
+          pipeline_task:
+            pipeline_id: 02f5df5a-e421-43cc-aaf4-968eae041b7e
+        - task_key: sdp_silver_shared_events
+          pipeline_task:
+            pipeline_id: 2fae3b07-21f4-455b-bf56-d50d25917517
+      queue:
+        enabled: true
+      parameters:
+        - name: dataset
+          default: ""
