@@ -1,0 +1,68 @@
+bundle:
+  name: dxe_data_ingestion-bundle
+
+permissions:
+  group_name: users
+  level: CAN_MANAGE
+
+include: 
+  notebooks/*.yml
+
+artifacts:
+  common_package:
+    type: whl
+    path:
+    build: pip wheel
+
+variables:
+  catalog:
+    description:  UnityCatalog name for each environment
+    default: datalake_dev
+  cluster_id:
+    description: ClusterID for each environment
+  silver_job_id:
+    description: job_id for silver pipeline
+
+resources:
+  jobs:
+    job_master:
+      name: job_master
+      tasks:
+        - task_key: run_control_master
+          notebook_task:
+            notebook_path: /Workspace/Users/jay.tuck@circyl.co.uk/Datalake_Forecasting/Databricks/notebooks/ingestion/control-master
+            source: WORKSPACE
+          existing_cluster_id: ${var.cluster_id}
+        - task_key: run_extract_bronze
+          depends_on:
+            - task_key: run_control_master
+          notebook_task:
+            notebook_path: /Workspace/Users/jay.tuck@circyl.co.uk/Datalake_Forecasting/Databricks/notebooks/extract/control-extract-bronze-sql
+            source: WORKSPACE
+          existing_cluster_id: ${var.cluster_id}
+        - task_key: run_job_silver
+          depends_on:
+            - task_key: run_extract_bronze
+          run_job_task:
+            job_id: 718334845194690
+        - task_key: populate_keymap_tables
+          depends_on:
+            - task_key: run_job_silver
+          notebook_task:
+            notebook_path: /Workspace/Users/ally.allen@circyl.co.uk/Datalake_Forecasting/Databricks/notebooks/transform/populate_gold_keymap
+            source: WORKSPACE
+          existing_cluster_id: 0605-081756-ixj7yqyo
+        - task_key: run_job_gold
+          depends_on:
+            - task_key: populate_keymap_tables
+          run_job_task:
+            job_id: 696808530170818
+      queue:
+        enabled: true
+      parameters:
+        - name: dataset
+          default: master
+        - name: datasource
+          default: all
+      run_as:
+        user_name: ally.allen@circyl.co.uk
