@@ -1,0 +1,27 @@
+resources:
+  pipelines:
+    pipeline_sdp_silver_shared_events:
+      name: sdp_silver_shared_events
+      configuration:
+        TARGET_SCHEMA: silver_shared_events
+        QUERIES_PATH: /Volumes/datalake_dev/config
+      clusters:
+        - label: default
+          policy_id: 0016D424A421E804
+          autoscale:
+            min_workers: 1
+            max_workers: 2
+            mode: ENHANCED
+        - label: maintenance
+          policy_id: 0016D424A421E804
+      libraries:
+        - file:
+            path: /Users/ally.allen@circyl.co.uk/Datalake_Forecasting/Databricks/pipeline/silver/pipeline_silver.py
+      schema: silver_shared_events
+      development: true
+      catalog: datalake_dev
+      environment:
+        dependencies:
+          - /Volumes/datalake_dev/config/config/common-1.2.0-py3-none-any.whl
+      run_as:
+        user_name: ally.allen@circyl.co.uk
