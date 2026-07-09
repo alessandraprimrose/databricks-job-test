@@ -1,27 +1,69 @@
+variables:
+  catalog:
+    description: Unity Catalog name for this environment
+  cluster_policy_id:
+    description: Cluster policy ID for this environment
+  is_development:
+    description: Whether this pipeline runs in development mode
+    default: false
+  run_as_service_principal:
+    description: Application (client) ID of the service principal to run the pipeline 
+
 resources:
   pipelines:
     pipeline_sdp_silver_shared_dimensions:
       name: sdp_silver_shared_dimensions
       configuration:
         TARGET_SCHEMA: silver_shared_dimensions
-        QUERIES_PATH: /Volumes/datalake_dev/config
+        QUERIES_PATH: /Volumes/${var.catalog}/config
       clusters:
         - label: default
-          policy_id: 0016D424A421E804
+          policy_id: ${var.cluster_policy_id}
           autoscale:
             min_workers: 1
             max_workers: 2
             mode: ENHANCED
         - label: maintenance
-          policy_id: 0016D424A421E804
+          policy_id: ${var.cluster_policy_id}
       libraries:
         - file:
             path: /Users/ally.allen@circyl.co.uk/Datalake_Forecasting/Databricks/pipeline/silver/pipeline_silver.py
       schema: silver_shared_dimensions
-      development: true
-      catalog: datalake_dev
+      development: ${var.is_development}
+      catalog: ${var.catalog}
       environment:
         dependencies:
-          - /Volumes/datalake_dev/config/config/common-1.2.0-py3-none-any.whl
+          - /Volumes/${var.catalog}/config/config/common-1.2.0-py3-none-any.whl
       run_as:
-        user_name: ally.allen@circyl.co.uk
+        user_name: ${var.run_as_service_principal}
+
+targets:
+  dev:
+    mode: development
+    workspace:
+      host: https://adb-7405615676142325.5.azuredatabricks.net/
+    variables:
+      catalog: datalake_dev
+      cluster_policy_id: 0016D424A421E804
+      is_development: true
+      run_as_service_principal: <dev-sp-application-id>
+
+  staging:
+    mode: production
+    workspace:
+      host: https://<your-staging-workspace>.azuredatabricks.net
+    variables:
+      catalog: datalake_staging
+      cluster_policy_id: <staging-policy-id>
+      is_development: false
+      run_as_service_principal: <staging-sp-application-id>
+
+  prod:
+    mode: production
+    workspace:
+      host: https://<your-prod-workspace>.azuredatabricks.net
+    variables:
+      catalog: datalake_prod
+      cluster_policy_id: <prod-policy-id>
+      is_development: false
+      run_as_service_principal: <prod-sp-application-id>
