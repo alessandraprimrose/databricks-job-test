@@ -11,7 +11,7 @@ variables:
 
 resources:
   pipelines:
-    pipeline_sdp_gold_items::
+    pipeline_sdp_gold_items:
       name: sdp_gold_items
       configuration:
         TARGET_SCHEMA: gold_items
