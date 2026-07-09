@@ -27,7 +27,7 @@ resources:
           policy_id: ${var.cluster_policy_id}
       libraries:
         - file:
-            path: /Users/ally.allen@circyl.co.uk/Datalake_Forecasting/Databricks/pipeline/silver/pipeline_silver.py
+            path: /Users/ally.allen@circyl.co.uk/Datalake_Forecasting/Databricks/pipeline/gold/pipeline_gold_wqueries.py
       schema: gold_itmes
       development: ${var.is_development}
       catalog: ${var.catalog}
