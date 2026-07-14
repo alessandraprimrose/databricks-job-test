@@ -88,9 +88,9 @@ targets:
   staging:
     mode: production
     workspace:
-      host: https://<your-staging-workspace>.azuredatabricks.net
+      host: https://adb-7405608262334943.3.azuredatabricks.net/
     variables:
-      catalog: datalake_staging
+      catalog: datalake_uat
       silver_job_id: <staging-silver-job-id>
       gold_job_id: <staging-gold-job-id>
       cluster_id: <staging-cluster-id>
