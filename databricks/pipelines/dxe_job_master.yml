@@ -42,6 +42,13 @@ resources:
             notebook_path: /Workspace/Users/jay.tuck@circyl.co.uk/Datalake_Forecasting/Databricks/notebooks/extract/control-extract-bronze-sql
             source: WORKSPACE
           existing_cluster_id: ${var.cluster_id}
+        - task_key: run_extract_csv
+          depends_on:
+            - task_key: run_control_master
+          notebook_task:
+            notebook_path: /Workspace/Users/jay.tuck@circyl.co.uk/Datalake_Forecasting/Databricks/notebooks/extract/control-extract-bronze-csv
+            source: WORKSPACE
+          existing_cluster_id: ${var.cluster_id}
         - task_key: run_job_silver
           depends_on:
             - task_key: run_extract_bronze
