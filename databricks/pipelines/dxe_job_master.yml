@@ -22,8 +22,8 @@ variables:
     description: ClusterID for each environment
   silver_job_id:
     description: Environment specific ID for silver job
-  gold_job_id:
-    description: Environment specific ID for gold job
+  gold_queries_path:
+    description: Volume path to find gold queries in each environment
 
 resources:
   jobs:
@@ -54,11 +54,15 @@ resources:
             notebook_path: /Workspace/Users/ally.allen@circyl.co.uk/Datalake_Forecasting/Databricks/notebooks/transform/populate_gold_keymap
             source: WORKSPACE
           existing_cluster_id: ${var.cluster_id}
-        - task_key: run_job_gold
+        - task_key: run_gold_transform
           depends_on:
             - task_key: populate_keymap_tables
-          run_job_task:
-            job_id: ${var.gold_job_id}
+          notebook_task:
+            notebook_path: /Workspace/Users/jay.tuck@circyl.co.uk/Datalake_Forecasting/Databricks/notebooks/transform/control_gold_transform
+            base_parameters:
+              queries_path: ${var.gold_queries_path}
+            source: WORKSPACE
+          existing_cluster_id: ${var.cluster_id}
       queue:
         enabled: true
       parameters:
@@ -77,8 +81,8 @@ targets:
     variables:
       catalog: datalake_dev
       silver_job_id: 718334845194690
-      gold_job_id: 696808530170818
       cluster_id: 0605-081756-ixj7yqyo
+      gold_queries_path: /Volumes/datalake_dev/config/
       run_as_service_principal: <dev-sp-application-id>
 
   staging:
