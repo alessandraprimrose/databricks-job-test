@@ -1,0 +1,69 @@
+variables:
+  catalog:
+    description: Unity Catalog name for this environment
+  cluster_policy_id:
+    description: Cluster policy ID for this environment
+  is_development:
+    description: Whether this pipeline runs in development mode
+    default: false
+  run_as_service_principal:
+    description: Application (client) ID of the service principal to run the pipeline 
+
+resources:
+  pipelines:
+    pipeline_sdp_silver_users:
+      name: sdp_silver_users
+      configuration:
+        TARGET_SCHEMA: silver_forecasting
+        QUERIES_PATH: /Volumes/${var.catalog}/config
+      clusters:
+        - label: default
+          policy_id: ${var.cluster_policy_id}
+          autoscale:
+            min_workers: 1
+            max_workers: 2
+            mode: ENHANCED
+        - label: maintenance
+          policy_id: ${var.cluster_policy_id}
+      libraries:
+        - file:
+            path: /Users/ally.allen@circyl.co.uk/Datalake_Forecasting/Databricks/pipeline/silver/pipeline_silver.py
+      schema: silver_users
+      development: ${var.is_development}
+      catalog: ${var.catalog}
+      environment:
+        dependencies:
+          - /Volumes/${var.catalog}/config/config/common-1.2.0-py3-none-any.whl
+      run_as:
+        user_name: ${var.run_as_service_principal}
+
+targets:
+  dev:
+    mode: development
+    workspace:
+      host: https://adb-7405615676142325.5.azuredatabricks.net/
+    variables:
+      catalog: datalake_dev
+      cluster_policy_id: 0016D424A421E804
+      is_development: true
+      run_as_service_principal: <dev-sp-application-id>
+
+  staging:
+    mode: production
+    workspace:
+      host: https://adb-7405608262334943.3.azuredatabricks.net/
+    variables:
+      catalog: datalake_uat
+      cluster_policy_id: <staging-policy-id>
+      is_development: false
+      run_as_service_principal: <staging-sp-application-id>
+
+  prod:
+    mode: production
+    workspace:
+      host: https://<your-prod-workspace>.azuredatabricks.net
+    variables:
+      catalog: datalake_prod
+      cluster_policy_id: <prod-policy-id>
+      is_development: false
+      run_as_service_principal: <prod-sp-application-id>
