@@ -14,7 +14,7 @@ resources:
     pipeline_sdp_silver_users:
       name: sdp_silver_users
       configuration:
-        TARGET_SCHEMA: silver_forecasting
+        TARGET_SCHEMA: silver_users
         QUERIES_PATH: /Volumes/${var.catalog}/config
       clusters:
         - label: default
