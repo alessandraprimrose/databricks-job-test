@@ -52,6 +52,7 @@ resources:
         - task_key: run_job_silver
           depends_on:
             - task_key: run_extract_bronze
+            - task_key: run_extract_csv
           run_job_task:
             job_id: ${var.silver_job_id}
         - task_key: populate_keymap_tables
